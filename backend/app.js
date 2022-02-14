@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const sequelize = require("./utils/database");
 const userRouter = require("./controllers/users");
