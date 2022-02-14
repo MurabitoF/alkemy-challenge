@@ -1,7 +1,8 @@
 require("dotenv").config();
 const express = require("express");
-const sequelize = require("./utils/database");
+const sequelize = require("./config/database");
 const userRouter = require("./controllers/users");
+const loginRouter = require("./controllers/login");
 
 const app = express();
 
@@ -20,5 +21,6 @@ sequelize.sync().then(() => {
 
 app.use(express.json());
 app.use("/api/users", userRouter);
+app.use("/api/login", loginRouter);
 
 module.exports = app;
