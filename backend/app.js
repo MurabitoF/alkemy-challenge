@@ -12,6 +12,8 @@ sequelize
 		console.log("Error on connection to database:", error);
 	});
 
-sequelize.sync();
+sequelize.sync().then(() => {
+	console.log("Tables synchronized");
+});
 
 module.exports = app;
