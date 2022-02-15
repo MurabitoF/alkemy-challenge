@@ -1,19 +1,23 @@
 const transactionRouter = require("express").Router();
 const Transaction = require("../models/Transaction");
+const auth = require("../middleware/authentication");
 
-transactionRouter.get("/", (req, res) => {
-	const id = 1;
-	Transaction.findAll({ where: { userID: id } }).then((transactions) => {
+transactionRouter.get("/", auth, (req, res) => {
+	const userID = req.user.userID;
+
+	Transaction.findAll({ where: { userID: userID } }).then((transactions) => {
 		res.json(transactions);
 	});
 });
 
-transactionRouter.get("/:limit", (req, res) => {
+transactionRouter.get("/:limit", auth, (req, res) => {
 	const limit = Number(req.params.limit);
+
+	const userID = req.user.userID;
 
 	Transaction.findAll({
 		where: {
-			userID: 1,
+			userID: userID,
 		},
 		limit: limit,
 	}).then((transactions) => {
@@ -21,10 +25,11 @@ transactionRouter.get("/:limit", (req, res) => {
 	});
 });
 
-transactionRouter.post("/", (req, res) => {
-	const { details, value, userID, typeID, categoryID } = req.body;
+transactionRouter.post("/", auth, (req, res) => {
+	const { details, value, typeID, categoryID } = req.body;
+	const userID = req.user.userID;
 
-	if (!(details && value && userID && typeID && categoryID)) {
+	if (!(details && value && typeID && categoryID)) {
 		res.status(400).json({ error: "all inputs are required" });
 	}
 
