@@ -15,6 +15,10 @@ const Transaction = sequelize.define("transactions", {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
+	value: {
+		type: DataTypes.FLOAT,
+		allowNull: false,
+	},
 	date: {
 		type: DataTypes.DATE,
 		defaultValue: DataTypes.NOW,
@@ -26,9 +30,10 @@ const options = {
 	onUpdate: "CASCADE",
 };
 
-User.hasMany(Transaction);
-Transaction.belongsTo(User, options);
-Transaction.belongsTo(Type, options);
-Transaction.belongsTo(Category, options);
+Transaction.belongsTo(User, { ...options, foreignKey: "userID" });
+
+Transaction.belongsTo(Type, { ...options, foreignKey: "typeID" });
+
+Transaction.belongsTo(Category, { ...options, foreignKey: "categoryID" });
 
 module.exports = Transaction;
