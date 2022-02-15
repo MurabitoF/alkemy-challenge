@@ -6,7 +6,7 @@ const loginRouter = require("./controllers/login");
 const transactionRouter = require("./controllers/transactions");
 const typeRouter = require("./controllers/types");
 const categoryRouter = require("./controllers/categories");
-const Category = require("./models/Category");
+const tokenExtractor = require("./middleware/tokenExtractor");
 
 const app = express();
 
@@ -24,6 +24,8 @@ sequelize.sync().then(() => {
 });
 
 app.use(express.json());
+app.use(tokenExtractor);
+
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/transactions", transactionRouter);
