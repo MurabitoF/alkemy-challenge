@@ -1,7 +1,5 @@
 const transactionRouter = require("express").Router();
 const Transaction = require("../models/Transaction");
-const Type = require("../models/Type");
-const Category = require("../models/Category");
 
 transactionRouter.get("/", (req, res) => {
 	const id = 1;
@@ -24,14 +22,17 @@ transactionRouter.get("/:limit", (req, res) => {
 });
 
 transactionRouter.post("/", (req, res) => {
-	const { details, value, date, userID, typeID, categoryID } = req.body;
+	const { details, value, userID, typeID, categoryID } = req.body;
+
 	if (!(details && value && userID && typeID && categoryID)) {
 		res.status(400).json({ error: "all inputs are required" });
 	}
+
 	if (value <= 0) {
 		res.status(400).json({ error: "value must be greater than zero" });
 	}
-	Transaction.create({ details, value, date, userID, typeID, categoryID })
+
+	Transaction.create({ details, value, userID, typeID, categoryID })
 		.then((newTransaction) => {
 			res.json(newTransaction);
 		})
