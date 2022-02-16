@@ -7,6 +7,7 @@ const transactionRouter = require("./controllers/transactions");
 const typeRouter = require("./controllers/types");
 const categoryRouter = require("./controllers/categories");
 const unknownEndpoint = require("./middleware/unknownEndpoint");
+const cors = require("cors");
 
 const app = express();
 
@@ -19,11 +20,12 @@ sequelize
 		console.log("Error on connection to database:", error);
 	});
 
-// sequelize.sync().then(() => {
+// sequelize.sync({ force: true }).then(() => {
 // 	console.log("Tables synchronized");
 // });
 
 app.use(express.json());
+app.use(cors());
 
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
