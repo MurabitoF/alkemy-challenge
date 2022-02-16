@@ -1,0 +1,22 @@
+.notification {
+	width: 100%;
+	border: 1px solid;
+	border-radius: 5px;
+	margin-bottom: 0.5em;
+	padding: 0.35em;
+	font-weight: bold;
+	text-align: center;
+	font-size: 1.1em;
+}
+
+.error {
+	background-color: rgba(216, 24, 24, 0.3);
+	border-color: #d81818;
+	color: #d81818;
+}
+
+.success {
+	background-color: rgba(120, 204, 36, 0.3);
+	border-color: #78cc24;
+	color: #78cc24;
+}
