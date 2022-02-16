@@ -4,6 +4,7 @@ import { Header, Button, Form, Container } from "semantic-ui-react";
 import * as Yup from "yup";
 import loginService from "../services/loginService";
 import Notification from "./Notification";
+import transactionsService from "../services/transactionsService";
 
 const LoginSchema = Yup.object({
 	email: Yup.string().email("Invalid email").required("Email is required"),
@@ -42,8 +43,8 @@ const LoginForm = ({ setUser, notification, setNotification }) => {
 		onSubmit: async (formData) => {
 			try {
 				const user = await loginService.login(formData);
-				localStorage.setItem("loggedUser", JSON.stringify(user));
 				setUser(user.email);
+				transactionsService.setToken(user.token);
 			} catch (error) {
 				setNotification({
 					type: "error",

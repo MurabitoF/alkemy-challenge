@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Container, Header } from "semantic-ui-react";
 import LoginForm from "./components/LoginForm";
+import NavBar from "./components/NavBar";
+import TransactionsHub from "./components/TransactionsHub";
+import TransactionsTable from "./components/TransactionsTable";
+import transactionsService from "./services/transactionsService";
 
 function App() {
 	const [user, setUser] = useState(null);
@@ -8,14 +12,26 @@ function App() {
 		type: null,
 		message: null,
 	});
+	const [lastTransactions, setLastTransactions] = useState([]);
+	const [show, setShow] = useState("home");
 
 	useEffect(() => {
-		const loggedUser = localStorage.getItem("loggedUser");
-		if (loggedUser) {
-			const user = JSON.parse(loggedUser);
-			setUser(user);
+		const fetchLastTransactions = async () => {
+			const transactions = await transactionsService.getLastTransactions(
+				10
+			);
+			setLastTransactions(transactions);
+		};
+
+		if (user) {
+			fetchLastTransactions();
 		}
-	}, []);
+	}, [user]);
+
+	const handleLogout = () => {
+		setUser(null);
+		transactionsService.setToken("");
+	};
 
 	if (!user) {
 		return (
@@ -29,12 +45,19 @@ function App() {
 
 	return (
 		<>
-			<Container fluid style={{ padding: "0.5em 1.5em" }}>
-				{" "}
-				<Header size="large">Money Management</Header>
-			</Container>
-			<Container>
-				<Header size="huge">Hola</Header>{" "}
+			<NavBar user={user} handleLogout={handleLogout} setShow={setShow} />
+			<Container style={{ marginTop: "6em" }}>
+				<Header size="huge">Hi, {user}</Header>
+				{show === "home" && (
+					<>
+						<Header size="medium">Last transactions</Header>
+						<TransactionsTable
+							categories
+							transactions={lastTransactions}
+						/>
+					</>
+				)}
+				{show === "transactions" && <TransactionsHub />}
 			</Container>
 		</>
 	);
