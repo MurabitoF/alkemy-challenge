@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Button, Table, Header, Pagination } from "semantic-ui-react";
 
-const TransactionsTable = ({ categories, actions, transactions }) => {
+const TransactionsTable = ({
+	categories,
+	actions,
+	transactions,
+	menu,
+	remove,
+}) => {
 	const [filteredTransactions, setFilteredTransactions] = useState([]);
 
 	useEffect(() => {
@@ -24,9 +30,76 @@ const TransactionsTable = ({ categories, actions, transactions }) => {
 		}
 		setFilteredTransactions(transactions.slice(10 * (nbrPage - 1), 10));
 	};
-	console.log(filteredTransactions, transactions);
+
 	return (
 		<>
+			{menu && (
+				<>
+					<Button
+						onClick={() =>
+							setFilteredTransactions(transactions.slice(0, 10))
+						}
+					>
+						All
+					</Button>
+					<Button
+						name="Car"
+						onClick={() =>
+							setFilteredTransactions(
+								transactions.filter(
+									(transaction) =>
+										transaction.category.name === "Car"
+								)
+							)
+						}
+					>
+						Car
+					</Button>
+
+					<Button
+						name="Entertainment"
+						onClick={() =>
+							setFilteredTransactions(
+								transactions.filter((transaction) => {
+									return (
+										transaction.category.name ===
+										"Entertainment"
+									);
+								})
+							)
+						}
+					>
+						Entertainment
+					</Button>
+
+					<Button
+						name="Food"
+						onClick={() =>
+							setFilteredTransactions(
+								transactions.filter((transaction) => {
+									return transaction.category.name === "Food";
+								})
+							)
+						}
+					>
+						Food
+					</Button>
+
+					<Button
+						name="House"
+						onClick={() =>
+							setFilteredTransactions(
+								transactions.filter(
+									(transaction) =>
+										transaction.category.name === "House"
+								)
+							)
+						}
+					>
+						House
+					</Button>
+				</>
+			)}
 			<Table color="blue">
 				<Table.Header>
 					<Table.Row>
@@ -61,7 +134,11 @@ const TransactionsTable = ({ categories, actions, transactions }) => {
 								{actions ? (
 									<Table.Cell>
 										<Button color="blue" icon={"pencil"} />
-										<Button color="red" icon={"trash"} />
+										<Button
+											color="red"
+											icon={"trash"}
+											onClick={() => remove(transaction)}
+										/>
 									</Table.Cell>
 								) : null}
 							</Table.Row>

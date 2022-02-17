@@ -23,7 +23,9 @@ function App() {
 			setTransactions(transactions);
 		};
 
-		fetchAllTransactions();
+		if (user) {
+			fetchAllTransactions();
+		}
 	}, [user]);
 
 	const handleLogin = async (formData) => {
@@ -49,6 +51,17 @@ function App() {
 		transactionsService.setToken("");
 	};
 
+	const removeTransaction = async (transaction) => {
+		if (window.confirm(`Do you want to delete ${transaction.details}?`)) {
+			await transactionsService.removeTransaction(transaction);
+			setTransactions(
+				transactions.filter(
+					(t) => t.transactionID !== transaction.transactionID
+				)
+			);
+		}
+	};
+
 	if (!user) {
 		return <LoginForm notification={notification} onSubmit={handleLogin} />;
 	}
@@ -71,6 +84,7 @@ function App() {
 					<TransactionsHub
 						transactions={transactions}
 						setTransactions={setTransactions}
+						remove={removeTransaction}
 					/>
 				)}
 			</Container>

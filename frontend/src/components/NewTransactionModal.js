@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Loader } from "semantic-ui-react";
-import NewTransactionForm from "./NewTransactionForm";
+import NewTransactionForm from "./TransactionForm";
 import categoriesService from "../services/categoriesService";
 import typesService from "../services/typesService";
 

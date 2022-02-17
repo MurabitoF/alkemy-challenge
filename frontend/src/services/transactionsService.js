@@ -32,9 +32,18 @@ const postNewTransaction = async (newTransaction) => {
 	return response.data;
 };
 
+const removeTransaction = async (transaction) => {
+	const id = transaction.transactionID;
+	const config = {
+		headers: { Authorization: token },
+	};
+	await axios.delete(`${baseUrl}/${id}`, config);
+};
+
 export default {
 	setToken,
 	getAllTransactions,
 	getLastTransactions,
 	postNewTransaction,
+	removeTransaction,
 };
