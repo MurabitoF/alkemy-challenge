@@ -24,7 +24,7 @@ function App() {
 		};
 
 		fetchAllTransactions();
-	}, []);
+	}, [user]);
 
 	const handleLogin = async (formData) => {
 		try {
@@ -44,6 +44,8 @@ function App() {
 
 	const handleLogout = () => {
 		setUser(null);
+		setTransactions([]);
+		setShow("home");
 		transactionsService.setToken("");
 	};
 

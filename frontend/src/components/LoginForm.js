@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import { Header, Button, Form, Container } from "semantic-ui-react";
 import * as Yup from "yup";
 import Notification from "./Notification";
+import NewUserModal from "./NewUserModal";
 
 const LoginSchema = Yup.object({
 	email: Yup.string().email("Invalid email").required("Email is required"),
@@ -32,6 +33,7 @@ const styles = {
 };
 
 const LoginForm = ({ notification, onSubmit }) => {
+	const [register, setRegister] = useState(false);
 	const formik = useFormik({
 		initialValues: {
 			email: "",
@@ -40,6 +42,13 @@ const LoginForm = ({ notification, onSubmit }) => {
 		validationSchema: LoginSchema,
 		onSubmit: onSubmit,
 	});
+
+	const openModal = () => {
+		setRegister(true);
+	};
+	const closeModal = () => {
+		setRegister(false);
+	};
 
 	return (
 		<Container style={styles.container}>
@@ -64,6 +73,10 @@ const LoginForm = ({ notification, onSubmit }) => {
 				/>
 				<Button type="submit" primary style={styles.button}>
 					Login
+				</Button>
+				<NewUserModal modalOpen={register} onClose={closeModal} />
+				<Button as={"a"} onClick={openModal}>
+					Create new user
 				</Button>
 			</Form>
 		</Container>
