@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Tab } from "semantic-ui-react";
 import TransactionsTable from "./TransactionsTable";
 import transactionsService from "../services/transactionsService";
@@ -14,7 +14,6 @@ const TransactionsHub = ({ transactions, setTransactions }) => {
 		try {
 			const savedTransaction =
 				await transactionsService.postNewTransaction(values);
-			console.log(savedTransaction);
 			setTransactions([savedTransaction, ...transactions]);
 			closeModal();
 		} catch (error) {

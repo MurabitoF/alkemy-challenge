@@ -2,9 +2,7 @@ import React from "react";
 import { useFormik } from "formik";
 import { Header, Button, Form, Container } from "semantic-ui-react";
 import * as Yup from "yup";
-import loginService from "../services/loginService";
 import Notification from "./Notification";
-import transactionsService from "../services/transactionsService";
 
 const LoginSchema = Yup.object({
 	email: Yup.string().email("Invalid email").required("Email is required"),
@@ -33,28 +31,14 @@ const styles = {
 	},
 };
 
-const LoginForm = ({ setUser, notification, setNotification }) => {
+const LoginForm = ({ notification, onSubmit }) => {
 	const formik = useFormik({
 		initialValues: {
 			email: "",
 			password: "",
 		},
 		validationSchema: LoginSchema,
-		onSubmit: async (formData) => {
-			try {
-				const user = await loginService.login(formData);
-				setUser(user.email);
-				transactionsService.setToken(user.token);
-			} catch (error) {
-				setNotification({
-					type: "error",
-					message: error.response.data,
-				});
-				setInterval(() => {
-					setNotification({ type: null, notification: null });
-				}, 5000);
-			}
-		},
+		onSubmit: onSubmit,
 	});
 
 	return (

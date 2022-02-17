@@ -12,7 +12,7 @@ const BalanceCard = ({ transactions }) => {
 		<Segment
 			color={total >= 0 ? "green" : "red"}
 			inverted
-			secondary
+			tertiary
 			textAlign="center"
 		>
 			<Header as={"h3"}>Balance: {total}</Header>

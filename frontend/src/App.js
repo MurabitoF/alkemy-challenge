@@ -6,6 +6,7 @@ import NavBar from "./components/NavBar";
 import TransactionsHub from "./components/TransactionsHub";
 import TransactionsTable from "./components/TransactionsTable";
 import transactionsService from "./services/transactionsService";
+import loginService from "./services/loginService";
 
 function App() {
 	const [transactions, setTransactions] = useState([]);
@@ -25,19 +26,29 @@ function App() {
 		fetchAllTransactions();
 	}, []);
 
+	const handleLogin = async (formData) => {
+		try {
+			const user = await loginService.login(formData);
+			setUser(user.email);
+			transactionsService.setToken(user.token);
+		} catch (error) {
+			setNotification({
+				type: "error",
+				message: error.response.data,
+			});
+			setInterval(() => {
+				setNotification({ type: null, notification: null });
+			}, 5000);
+		}
+	};
+
 	const handleLogout = () => {
 		setUser(null);
 		transactionsService.setToken("");
 	};
 
 	if (!user) {
-		return (
-			<LoginForm
-				setUser={setUser}
-				notification={notification}
-				setNotification={setNotification}
-			/>
-		);
+		return <LoginForm notification={notification} onSubmit={handleLogin} />;
 	}
 
 	return (
