@@ -23,6 +23,10 @@ const Transaction = sequelize.define("transactions", {
 		type: DataTypes.DATE,
 		defaultValue: DataTypes.NOW,
 	},
+	active: {
+		type: DataTypes.BOOLEAN,
+		defaultValue: true,
+	},
 });
 
 const options = {

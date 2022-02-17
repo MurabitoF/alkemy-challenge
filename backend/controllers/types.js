@@ -3,7 +3,7 @@ const Type = require("../models/Type");
 
 typeRouter.get("/", (req, res) => {
 	Type.findAll({ attributes: ["typeID", "name"] }).then((types) => {
-		res.json({ types });
+		res.json(types);
 	});
 });
 
