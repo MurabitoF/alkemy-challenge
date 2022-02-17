@@ -74,4 +74,39 @@ transactionRouter.post("/", auth, (req, res) => {
 		});
 });
 
+transactionRouter.put("/:id", auth, (req, res) => {
+	const id = req.params.id;
+	const { type, details, value, category, date } = req.body;
+	Transaction.findByPk(id)
+		.then((transaction) => {
+			if (type !== transaction.Type.typeID) {
+				return res.status(400).send("Cannot change the type");
+			}
+			transaction.details = details;
+			transaction.value = value;
+			(transaction.categoryID = category), (transaction.date = date);
+
+			transaction.save().then((updatedTransaction) => {
+				res.json(updatedTransaction);
+			});
+		})
+		.catch((error) => {
+			res.status(400).send("Transaction not found");
+		});
+});
+
+transactionRouter.delete("/:id", auth, (req, res) => {
+	const id = req.params.id;
+	Transaction.findByPk(id)
+		.then((transaction) => {
+			transaction.active = false;
+			transaction.save().then((deletedTransaction) => {
+				res.sendStatus(204);
+			});
+		})
+		.catch((error) => {
+			res.status(400).send("Transaction not found");
+		});
+});
+
 module.exports = transactionRouter;
