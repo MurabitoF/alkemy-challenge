@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Tab } from "semantic-ui-react";
+import { Button, Tab } from "semantic-ui-react";
 import TransactionsTable from "./TransactionsTable";
 import transactionsService from "../services/transactionsService";
+import NewTransactionModal from "./NewTransactionModal";
 
-const TransactionsHub = () => {
-	const [transactions, setTransactions] = useState([]);
+const TransactionsHub = ({ transactions, setTransactions }) => {
+	const [modalOpen, setModalOpen] = useState(false);
 
-	useEffect(() => {
-		const fetchAllTransactions = async () => {
-			const transactions = await transactionsService.getAllTransactions();
-			setTransactions(transactions);
-		};
-		fetchAllTransactions();
-	}, []);
+	const openModal = () => setModalOpen(true);
+	const closeModal = () => setModalOpen(false);
+
+	const submitNewTransaction = async (values) => {
+		try {
+			const savedTransaction =
+				await transactionsService.postNewTransaction(values);
+			console.log(savedTransaction);
+			setTransactions([savedTransaction, ...transactions]);
+			closeModal();
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const panes = [
 		{
@@ -30,7 +38,6 @@ const TransactionsHub = () => {
 			render: () => (
 				<TransactionsTable
 					actions
-					categories
 					transactions={transactions.filter(
 						(t) => t.type.name === "income"
 					)}
@@ -51,7 +58,23 @@ const TransactionsHub = () => {
 		},
 	];
 
-	return <Tab menu={{ color: "blue", inverted: true }} panes={panes} />;
+	return (
+		<>
+			<Tab menu={{ color: "blue", inverted: true }} panes={panes} />{" "}
+			<NewTransactionModal
+				modalOpen={modalOpen}
+				onClose={closeModal}
+				onSubmit={submitNewTransaction}
+			/>
+			<Button
+				style={{ marginTop: "0.5em" }}
+				color="green"
+				onClick={() => openModal()}
+			>
+				Add transaction
+			</Button>
+		</>
+	);
 };
 
 export default TransactionsHub;

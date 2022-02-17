@@ -24,4 +24,17 @@ const getLastTransactions = async (limit) => {
 	return response.data;
 };
 
-export default { setToken, getAllTransactions, getLastTransactions };
+const postNewTransaction = async (newTransaction) => {
+	const config = {
+		headers: { Authorization: token },
+	};
+	const response = await axios.post(baseUrl, newTransaction, config);
+	return response.data;
+};
+
+export default {
+	setToken,
+	getAllTransactions,
+	getLastTransactions,
+	postNewTransaction,
+};

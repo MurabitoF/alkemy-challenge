@@ -7,26 +7,22 @@ import TransactionsTable from "./components/TransactionsTable";
 import transactionsService from "./services/transactionsService";
 
 function App() {
+	const [transactions, setTransactions] = useState([]);
 	const [user, setUser] = useState(null);
 	const [notification, setNotification] = useState({
 		type: null,
 		message: null,
 	});
-	const [lastTransactions, setLastTransactions] = useState([]);
 	const [show, setShow] = useState("home");
 
 	useEffect(() => {
-		const fetchLastTransactions = async () => {
-			const transactions = await transactionsService.getLastTransactions(
-				10
-			);
-			setLastTransactions(transactions);
+		const fetchAllTransactions = async () => {
+			const transactions = await transactionsService.getAllTransactions();
+			setTransactions(transactions);
 		};
 
-		if (user) {
-			fetchLastTransactions();
-		}
-	}, [user]);
+		fetchAllTransactions();
+	}, []);
 
 	const handleLogout = () => {
 		setUser(null);
@@ -52,12 +48,16 @@ function App() {
 					<>
 						<Header size="medium">Last transactions</Header>
 						<TransactionsTable
-							categories
-							transactions={lastTransactions}
+							transactions={transactions.slice(0, 10)}
 						/>
 					</>
 				)}
-				{show === "transactions" && <TransactionsHub />}
+				{show === "transactions" && (
+					<TransactionsHub
+						transactions={transactions}
+						setTransactions={setTransactions}
+					/>
+				)}
 			</Container>
 		</>
 	);

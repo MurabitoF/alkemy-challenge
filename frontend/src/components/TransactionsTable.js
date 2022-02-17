@@ -1,7 +1,11 @@
 import React from "react";
-import { Button, Table, Loader } from "semantic-ui-react";
+import { Button, Table, Header } from "semantic-ui-react";
 
 const TransactionsTable = ({ categories, actions, transactions }) => {
+	if (!transactions.length) {
+		return <Header as={"h3"}>No transactions registered</Header>;
+	}
+
 	return (
 		<>
 			<Table color="blue">
@@ -20,48 +24,31 @@ const TransactionsTable = ({ categories, actions, transactions }) => {
 						) : null}
 					</Table.Row>
 				</Table.Header>
-				{!transactions ? (
-					<Loader inverted>Loading</Loader>
-				) : (
-					<Table.Body>
-						{transactions.map((transaction) => {
-							return (
-								<Table.Row key={transaction.transactionID}>
+				<Table.Body>
+					{transactions.map((transaction) => {
+						return (
+							<Table.Row key={transaction.transactionID}>
+								<Table.Cell>{transaction.type.name}</Table.Cell>
+								<Table.Cell>{transaction.details}</Table.Cell>
+								<Table.Cell>{transaction.value}</Table.Cell>
+								<Table.Cell>
+									{new Date().toJSON().slice(0, 10)}
+								</Table.Cell>
+								{categories ? (
 									<Table.Cell>
-										{transaction.type.name}
+										{transaction.category?.name}
 									</Table.Cell>
+								) : null}
+								{actions ? (
 									<Table.Cell>
-										{transaction.details}
+										<Button color="blue" icon={"pencil"} />
+										<Button color="red" icon={"trash"} />
 									</Table.Cell>
-									<Table.Cell>{transaction.value}</Table.Cell>
-									<Table.Cell>
-										{new Date()
-											.toJSON()
-											.slice(0, 19)
-											.replace("T", " ")}
-									</Table.Cell>
-									{categories ? (
-										<Table.Cell>
-											{transaction.category.name}
-										</Table.Cell>
-									) : null}
-									{actions ? (
-										<Table.Cell>
-											<Button
-												color="blue"
-												icon={"pencil"}
-											/>
-											<Button
-												color="red"
-												icon={"trash"}
-											/>
-										</Table.Cell>
-									) : null}
-								</Table.Row>
-							);
-						})}
-					</Table.Body>
-				)}
+								) : null}
+							</Table.Row>
+						);
+					})}
+				</Table.Body>
 			</Table>
 		</>
 	);
