@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Header } from "semantic-ui-react";
+import BalanceCard from "./components/BalanceCard";
 import LoginForm from "./components/LoginForm";
 import NavBar from "./components/NavBar";
 import TransactionsHub from "./components/TransactionsHub";
@@ -46,6 +47,7 @@ function App() {
 				<Header size="huge">Hi, {user}</Header>
 				{show === "home" && (
 					<>
+						<BalanceCard transactions={transactions} />
 						<Header size="medium">Last transactions</Header>
 						<TransactionsTable
 							transactions={transactions.slice(0, 10)}
