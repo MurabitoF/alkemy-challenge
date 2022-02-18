@@ -25,7 +25,7 @@ transactionRouter.get("/", auth, (req, res) => {
 });
 
 transactionRouter.post("/", auth, (req, res) => {
-	const { details, value, type, category } = req.body;
+	const { details, value, type, category, date } = req.body;
 	const userID = req.user.userID;
 
 	if (!(details && value && type)) {
@@ -48,6 +48,7 @@ transactionRouter.post("/", auth, (req, res) => {
 		userID,
 		typeID: type,
 		categoryID: category || null,
+		date: date || null,
 	})
 		.then((newTransaction) => {
 			Transaction.findOne({
