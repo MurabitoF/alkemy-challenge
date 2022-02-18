@@ -18,7 +18,7 @@ transactionRouter.get("/", auth, (req, res) => {
 		],
 		where: { userID: userID, active: true },
 		attributes: ["transactionID", "details", "value", "date"],
-		order: [["date", "DESC"]],
+		order: [["createdAt", "DESC"]],
 	}).then((transactions) => {
 		res.json(transactions);
 	});
