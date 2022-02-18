@@ -22,26 +22,45 @@ const TransactionSchema = Yup.object({
 		.required("Value is required"),
 });
 
-const NewTransactionForm = ({ types, categories, onSubmit }) => {
+const TransactionForm = ({ types, categories, onSubmit, transaction }) => {
 	return (
 		<Formik
 			initialValues={{
-				type: "",
-				category: "",
-				details: "",
-				value: "",
-				date: "",
+				type: transaction ? transaction.type.typeID : "",
+				category: transaction.category
+					? transaction.category.categoryID
+					: "",
+				details: transaction ? transaction.details : "",
+				value: transaction ? transaction.value : "",
+				date: transaction ? transaction.date.slice(0, 19) : "",
+				transactionID: transaction ? transaction.transactionID : "",
 			}}
 			onSubmit={(values) => onSubmit(values)}
 			validationSchema={TransactionSchema}
 		>
 			{(props) => (
 				<Form>
+					{transaction && (
+						<>
+							<input
+								name="transactionID"
+								onChange={props.handleChange}
+								style={{ display: "none" }}
+							/>
+							<input
+								name="type"
+								onChange={props.handleChange}
+								style={{ display: "none" }}
+							/>
+						</>
+					)}
+
 					<Grid columns={2}>
 						<Grid.Row>
 							<Grid.Column>
 								<Select
 									name="type"
+									disabled={transaction ? true : false}
 									options={types}
 									errorPrompt
 									label="Type"
@@ -82,13 +101,15 @@ const NewTransactionForm = ({ types, categories, onSubmit }) => {
 							<Grid.Column>
 								<Input
 									name="date"
-									type="date"
+									type="datetime-local"
 									label="Date"
 									errorPrompt
 								/>
 							</Grid.Column>
 						</Grid.Row>
-						<SubmitButton color="green">Add</SubmitButton>
+						<SubmitButton color="green">
+							{transaction ? "Update" : "Add"}
+						</SubmitButton>
 						<ResetButton color="red">Clear</ResetButton>
 					</Grid>
 				</Form>
@@ -97,4 +118,4 @@ const NewTransactionForm = ({ types, categories, onSubmit }) => {
 	);
 };
 
-export default NewTransactionForm;
+export default TransactionForm;

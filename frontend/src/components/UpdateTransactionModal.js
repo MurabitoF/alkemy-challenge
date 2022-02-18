@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Loader } from "semantic-ui-react";
 import TransactionForm from "./TransactionForm";
-import categoriesService from "../services/categoriesService";
 import typesService from "../services/typesService";
+import categoriesService from "../services/categoriesService";
 
-const NewTransactionModal = ({ modalOpen, onClose, onSubmit }) => {
+const UpdateTransactionModal = ({
+	modalOpen,
+	onClose,
+	onSubmit,
+	transaction,
+}) => {
 	const [types, setTypes] = useState([]);
 	const [categories, setCategories] = useState([]);
 
@@ -30,6 +35,7 @@ const NewTransactionModal = ({ modalOpen, onClose, onSubmit }) => {
 						types={types}
 						categories={categories}
 						onSubmit={onSubmit}
+						transaction={transaction}
 					/>
 				)}
 			</Modal.Content>
@@ -37,4 +43,4 @@ const NewTransactionModal = ({ modalOpen, onClose, onSubmit }) => {
 	);
 };
 
-export default NewTransactionModal;
+export default UpdateTransactionModal;

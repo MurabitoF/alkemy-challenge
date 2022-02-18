@@ -16,6 +16,8 @@ function App() {
 		message: null,
 	});
 	const [show, setShow] = useState("home");
+	const [modalOpen, setModalOpen] = useState(false);
+	const [toUpdate, setToUpdate] = useState(null);
 
 	useEffect(() => {
 		const fetchAllTransactions = async () => {
@@ -51,6 +53,15 @@ function App() {
 		transactionsService.setToken("");
 	};
 
+	const open = (transaction) => {
+		setToUpdate(transaction);
+		setModalOpen(true);
+	};
+	const close = () => {
+		setModalOpen(false);
+		setToUpdate(null);
+	};
+
 	const removeTransaction = async (transaction) => {
 		if (window.confirm(`Do you want to delete ${transaction.details}?`)) {
 			await transactionsService.removeTransaction(transaction);
@@ -59,6 +70,23 @@ function App() {
 					(t) => t.transactionID !== transaction.transactionID
 				)
 			);
+		}
+	};
+
+	const updateTransaction = async (transaction) => {
+		try {
+			const updatedTransaction =
+				await transactionsService.updateTransaction(transaction);
+			setTransactions(
+				transactions.map((t) =>
+					t.transactionID !== updatedTransaction.transactionID
+						? t
+						: updatedTransaction
+				)
+			);
+			close();
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -85,6 +113,11 @@ function App() {
 						transactions={transactions}
 						setTransactions={setTransactions}
 						remove={removeTransaction}
+						update={updateTransaction}
+						toUpdate={toUpdate}
+						updateModal={modalOpen}
+						open={open}
+						onClose={close}
 					/>
 				)}
 			</Container>

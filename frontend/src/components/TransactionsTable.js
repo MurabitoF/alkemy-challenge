@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Table, Header, Pagination } from "semantic-ui-react";
+import UpdateTransactionModal from "./UpdateTransactionModal";
 
 const TransactionsTable = ({
 	categories,
@@ -7,6 +8,11 @@ const TransactionsTable = ({
 	transactions,
 	menu,
 	remove,
+	update,
+	modalOpen,
+	open,
+	onClose,
+	toUpdate,
 }) => {
 	const [filteredTransactions, setFilteredTransactions] = useState([]);
 
@@ -19,7 +25,6 @@ const TransactionsTable = ({
 	}
 
 	const handlePageChange = (nbrPage) => {
-		console.log(nbrPage === 1);
 		if (nbrPage === 1) {
 			return setFilteredTransactions(transactions.slice(0, 10));
 		}
@@ -133,7 +138,11 @@ const TransactionsTable = ({
 								) : null}
 								{actions ? (
 									<Table.Cell>
-										<Button color="blue" icon={"pencil"} />
+										<Button
+											color="blue"
+											icon={"pencil"}
+											onClick={() => open(transaction)}
+										/>
 										<Button
 											color="red"
 											icon={"trash"}
@@ -163,6 +172,12 @@ const TransactionsTable = ({
 					</Table.Footer>
 				)}
 			</Table>
+			<UpdateTransactionModal
+				modalOpen={modalOpen}
+				onClose={onClose}
+				onSubmit={update}
+				transaction={toUpdate}
+			/>
 		</>
 	);
 };

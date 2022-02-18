@@ -4,7 +4,16 @@ import TransactionsTable from "./TransactionsTable";
 import transactionsService from "../services/transactionsService";
 import NewTransactionModal from "./NewTransactionModal";
 
-const TransactionsHub = ({ transactions, setTransactions, remove }) => {
+const TransactionsHub = ({
+	transactions,
+	setTransactions,
+	remove,
+	update,
+	toUpdate,
+	updateModal,
+	open,
+	onClose,
+}) => {
 	const [modalOpen, setModalOpen] = useState(false);
 
 	const openModal = () => setModalOpen(true);
@@ -27,6 +36,11 @@ const TransactionsHub = ({ transactions, setTransactions, remove }) => {
 			render: () => (
 				<TransactionsTable
 					remove={remove}
+					update={update}
+					toUpdate={toUpdate}
+					modalOpen={updateModal}
+					open={open}
+					onClose={onClose}
 					actions
 					categories
 					transactions={transactions}
@@ -37,8 +51,13 @@ const TransactionsHub = ({ transactions, setTransactions, remove }) => {
 			menuItem: "Income",
 			render: () => (
 				<TransactionsTable
-					actions
 					remove={remove}
+					update={update}
+					toUpdate={toUpdate}
+					modalOpen={updateModal}
+					open={open}
+					onClose={onClose}
+					actions
 					transactions={transactions.filter(
 						(t) => t.type.name === "income"
 					)}
@@ -49,9 +68,14 @@ const TransactionsHub = ({ transactions, setTransactions, remove }) => {
 			menuItem: "Expenses",
 			render: () => (
 				<TransactionsTable
+					remove={remove}
+					update={update}
+					toUpdate={toUpdate}
+					modalOpen={updateModal}
+					open={open}
+					onClose={onClose}
 					actions
 					categories
-					remove={remove}
 					menu={true}
 					transactions={transactions.filter(
 						(t) => t.type.name === "expense"
