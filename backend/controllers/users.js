@@ -11,7 +11,7 @@ userRouter.post("/", (req, res) => {
 	const body = req.body;
 	User.create({ ...body })
 		.then((response) => {
-			res.json(response);
+			res.sendStatus(201);
 		})
 		.catch((error) => {
 			res.status(400).json({ error: error.errors });
