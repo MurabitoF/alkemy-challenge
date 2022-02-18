@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Tab } from "semantic-ui-react";
-import TransactionsTable from "./TransactionsTable";
-import transactionsService from "../services/transactionsService";
+import TransactionsTable from "../TransactionsTable";
+import transactionsService from "../../services/transactionsService";
 import NewTransactionModal from "./NewTransactionModal";
 
 const TransactionsHub = ({

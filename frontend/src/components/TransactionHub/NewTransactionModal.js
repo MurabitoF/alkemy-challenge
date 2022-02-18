@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Loader } from "semantic-ui-react";
-import TransactionForm from "./TransactionForm";
-import categoriesService from "../services/categoriesService";
-import typesService from "../services/typesService";
+import TransactionForm from "../TransactionForm";
+import categoriesService from "../../services/categoriesService";
+import typesService from "../../services/typesService";
 
 const NewTransactionModal = ({ modalOpen, onClose, onSubmit }) => {
 	const [types, setTypes] = useState([]);
