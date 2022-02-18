@@ -9,11 +9,11 @@ transactionRouter.get("/", auth, (req, res) => {
 
 	Transaction.findAll({
 		include: [
-			{ model: Type, as: "type", attributes: ["name"] },
+			{ model: Type, as: "type", attributes: ["typeID", "name"] },
 			{
 				model: Category,
 				as: "category",
-				attributes: ["name"],
+				attributes: ["categoryID", "name"],
 			},
 		],
 		where: { userID: userID, active: true },
@@ -52,17 +52,16 @@ transactionRouter.post("/", auth, (req, res) => {
 		.then((newTransaction) => {
 			Transaction.findOne({
 				include: [
-					{ model: Type, as: "type", attributes: ["name"] },
+					{ model: Type, as: "type", attributes: ["typeID", "name"] },
 					{
 						model: Category,
 						as: "category",
-						attributes: ["name"],
+						attributes: ["categoryID", "name"],
 					},
 				],
 				where: { transactionID: newTransaction.transactionID },
 				attributes: ["transactionID", "details", "value", "date"],
 			}).then((savedTransaction) => {
-				console.log(savedTransaction);
 				res.json(savedTransaction);
 			});
 		})
@@ -75,22 +74,44 @@ transactionRouter.post("/", auth, (req, res) => {
 });
 
 transactionRouter.put("/:id", auth, (req, res) => {
-	const id = req.params.id;
+	const id = Number(req.params.id);
 	const { type, details, value, category, date } = req.body;
-	Transaction.findByPk(id)
+	Transaction.findOne({
+		where: { transactionID: id },
+	})
 		.then((transaction) => {
-			if (type !== transaction.Type.typeID) {
+			if (type !== transaction.typeID) {
 				return res.status(400).send("Cannot change the type");
 			}
 			transaction.details = details;
 			transaction.value = value;
-			(transaction.categoryID = category), (transaction.date = date);
+			transaction.categoryID = category;
+			transaction.date = date;
 
-			transaction.save().then((updatedTransaction) => {
-				res.json(updatedTransaction);
+			transaction.save().then((transaction) => {
+				Transaction.findOne({
+					include: [
+						{
+							model: Type,
+							as: "type",
+							attributes: ["typeID", "name"],
+						},
+						{
+							model: Category,
+							as: "category",
+							attributes: ["categoryID", "name"],
+						},
+					],
+					where: { transactionID: transaction.transactionID },
+					attributes: ["transactionID", "details", "value", "date"],
+				}).then((updatedTransaction) => {
+					console.log(updatedTransaction);
+					res.json(updatedTransaction);
+				});
 			});
 		})
 		.catch((error) => {
+			console.log(error);
 			res.status(400).send("Transaction not found");
 		});
 });
