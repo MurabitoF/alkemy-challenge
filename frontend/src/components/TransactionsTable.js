@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Table, Header, Pagination } from "semantic-ui-react";
+import { Button, Table, Header, Pagination, Confirm } from "semantic-ui-react";
 import UpdateTransactionModal from "./UpdateTransactionModal";
 
 const TransactionsTable = ({
@@ -15,6 +15,8 @@ const TransactionsTable = ({
 	toUpdate,
 }) => {
 	const [filteredTransactions, setFilteredTransactions] = useState([]);
+	const [confirm, setConfirm] = useState(false);
+	const [toRemove, setToRemove] = useState(null);
 
 	useEffect(() => {
 		setFilteredTransactions(transactions.slice(0, 10));
@@ -34,6 +36,15 @@ const TransactionsTable = ({
 			);
 		}
 		setFilteredTransactions(transactions.slice(10 * (nbrPage - 1), 10));
+	};
+
+	const openConfirm = (transaction) => {
+		setConfirm(true);
+		setToRemove(transaction);
+	};
+	const closeConfirm = () => {
+		setConfirm(false);
+		setToRemove(null);
 	};
 
 	return (
@@ -129,7 +140,7 @@ const TransactionsTable = ({
 								<Table.Cell>{transaction.details}</Table.Cell>
 								<Table.Cell>{transaction.value}</Table.Cell>
 								<Table.Cell>
-									{new Date().toJSON().slice(0, 10)}
+									{transaction.date.slice(0, 10)}
 								</Table.Cell>
 								{categories ? (
 									<Table.Cell>
@@ -146,7 +157,9 @@ const TransactionsTable = ({
 										<Button
 											color="red"
 											icon={"trash"}
-											onClick={() => remove(transaction)}
+											onClick={() =>
+												openConfirm(transaction)
+											}
 										/>
 									</Table.Cell>
 								) : null}
@@ -172,12 +185,26 @@ const TransactionsTable = ({
 					</Table.Footer>
 				)}
 			</Table>
-			<UpdateTransactionModal
-				modalOpen={modalOpen}
-				onClose={onClose}
-				onSubmit={update}
-				transaction={toUpdate}
-			/>
+			{actions && (
+				<>
+					<Confirm
+						open={confirm}
+						content="Do you want delete this item"
+						onCancel={closeConfirm}
+						onConfirm={() => {
+							remove(toRemove);
+							closeConfirm();
+						}}
+						size="mini"
+					/>
+					<UpdateTransactionModal
+						modalOpen={modalOpen}
+						onClose={onClose}
+						onSubmit={update}
+						transaction={toUpdate}
+					/>
+				</>
+			)}
 		</>
 	);
 };

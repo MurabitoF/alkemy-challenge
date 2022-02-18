@@ -20,9 +20,25 @@ function App() {
 	const [toUpdate, setToUpdate] = useState(null);
 
 	useEffect(() => {
+		const loggedUser = localStorage.getItem("loggedUser");
+		if (loggedUser) {
+			const user = JSON.parse(loggedUser);
+			transactionsService.setToken(user.token);
+			setUser(user.email);
+		}
+	}, []);
+
+	useEffect(() => {
 		const fetchAllTransactions = async () => {
-			const transactions = await transactionsService.getAllTransactions();
-			setTransactions(transactions);
+			try {
+				const transactions =
+					await transactionsService.getAllTransactions();
+				setTransactions(transactions);
+			} catch (error) {
+				if (error.response.status === 401) {
+					handleLogout();
+				}
+			}
 		};
 
 		if (user) {
@@ -35,6 +51,7 @@ function App() {
 			const user = await loginService.login(formData);
 			setUser(user.email);
 			transactionsService.setToken(user.token);
+			localStorage.setItem("loggedUser", JSON.stringify(user));
 		} catch (error) {
 			setNotification({
 				type: "error",
@@ -51,6 +68,7 @@ function App() {
 		setTransactions([]);
 		setShow("home");
 		transactionsService.setToken("");
+		localStorage.clear();
 	};
 
 	const open = (transaction) => {
@@ -63,13 +81,17 @@ function App() {
 	};
 
 	const removeTransaction = async (transaction) => {
-		if (window.confirm(`Do you want to delete ${transaction.details}?`)) {
+		try {
 			await transactionsService.removeTransaction(transaction);
 			setTransactions(
 				transactions.filter(
 					(t) => t.transactionID !== transaction.transactionID
 				)
 			);
+		} catch (error) {
+			if (error.response.status === 401) {
+				handleLogout();
+			}
 		}
 	};
 
@@ -86,7 +108,10 @@ function App() {
 			);
 			close();
 		} catch (error) {
-			console.log(error);
+			console.log(error.response);
+			if (error.response.status === 401) {
+				handleLogout();
+			}
 		}
 	};
 

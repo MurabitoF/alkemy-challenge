@@ -27,9 +27,7 @@ const TransactionForm = ({ types, categories, onSubmit, transaction }) => {
 		<Formik
 			initialValues={{
 				type: transaction ? transaction.type.typeID : "",
-				category: transaction.category
-					? transaction.category.categoryID
-					: "",
+				category: transaction ? transaction.category.categoryID : "",
 				details: transaction ? transaction.details : "",
 				value: transaction ? transaction.value : "",
 				date: transaction ? transaction.date.slice(0, 19) : "",
@@ -57,7 +55,7 @@ const TransactionForm = ({ types, categories, onSubmit, transaction }) => {
 
 					<Grid columns={2}>
 						<Grid.Row>
-							<Grid.Column>
+							<Grid.Column mobile={16} tablet={8} computer={8}>
 								<Select
 									name="type"
 									disabled={transaction ? true : false}
@@ -66,7 +64,7 @@ const TransactionForm = ({ types, categories, onSubmit, transaction }) => {
 									label="Type"
 								/>
 							</Grid.Column>
-							<Grid.Column>
+							<Grid.Column mobile={16} tablet={8} computer={8}>
 								{props.values.type === 2 && (
 									<Select
 										name="category"
@@ -78,7 +76,7 @@ const TransactionForm = ({ types, categories, onSubmit, transaction }) => {
 							</Grid.Column>
 						</Grid.Row>
 						<Grid.Row>
-							<Grid.Column>
+							<Grid.Column mobile={16} tablet={8} computer={8}>
 								<Input
 									name="details"
 									type="text"
@@ -87,7 +85,7 @@ const TransactionForm = ({ types, categories, onSubmit, transaction }) => {
 									errorPrompt
 								/>
 							</Grid.Column>
-							<Grid.Column>
+							<Grid.Column mobile={16} tablet={8} computer={8}>
 								<Input
 									name="value"
 									type="number"
@@ -98,7 +96,7 @@ const TransactionForm = ({ types, categories, onSubmit, transaction }) => {
 							</Grid.Column>
 						</Grid.Row>
 						<Grid.Row>
-							<Grid.Column>
+							<Grid.Column mobile={16} tablet={8} computer={8}>
 								<Input
 									name="date"
 									type="datetime-local"
